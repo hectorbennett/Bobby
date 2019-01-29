@@ -68,7 +68,7 @@ class Bobby(object):
             message_to_tell = ' '.join(command.split(' ')[2:])
             if person_name in ['hector', 'irina']:
                 return '{} is pretty cool imo'.format(person_name.title())
-            return '@{} {}'.format(person_name.title(), message_to_tell)        
+            return '{} {}'.format(person_name.title(), message_to_tell)        
         if command.lower() == 'random emoji':
             return self.random_emoji()
         if command == '69':
