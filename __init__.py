@@ -63,10 +63,12 @@ class Bobby(object):
         )
 
     def create_response(self, command):
-        if command.lower() == 'tell rich he sucks':
-            return 'Rich you suck!'
-        if command.lower() == 'tell hector he sucks':
-            return 'Hector is pretty cool imo'
+        if command.lower().startswith('tell'):
+            person_name = command.split(' ')[1].lower()
+            message_to_tell = ' '.join(command.split(' ')[2:])
+            if person_name in ['hector', 'irina']:
+                return '{} is pretty cool imo'.format(person_name.title())
+            return '@{} {}'.format(person_name.title(), message_to_tell)        
         if command.lower() == 'random emoji':
             return self.random_emoji()
         if command == '69':
