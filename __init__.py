@@ -38,7 +38,7 @@ class Bobby(object):
                 user_id, message = self.parse_direct_mention(event['text'])
                 if user_id == self.bot_id:
                     return message, event['channel']
-        return None, None
+        return '', ''
 
     def parse_direct_mention(self, message_text):
         """
@@ -63,16 +63,23 @@ class Bobby(object):
         )
 
     def create_response(self, command):
-        if command == 'Tell Rich he sucks':
+        if command.lower() == 'tell rich he sucks':
             return 'Rich you suck!'
-        if command == 'Random Emoji':
+        if command.lower() == 'tell hector he sucks':
+            return 'Hector is pretty cool imo'
+        if command.lower() == 'random emoji':
             return self.random_emoji()
+        if command == '69':
+            return self.sixty_nine()
         return self.default_response
 
     def random_emoji(self):
         with open(os.path.join(sys.path[0], 'emojis.txt')) as emoji_file:
             emojis = emoji_file.read()
         return random.choice(emojis)
+
+    def sixty_nine(self):
+        return 'nice :sunglasses:'
 
 
 if __name__ == "__main__":
