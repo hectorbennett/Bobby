@@ -15,11 +15,8 @@ class Bobby(object):
     default_response = 'Not sure what you mean. Try yelling at your monitor.'
 
     def __init__(self, client):
-        print('init')
         self.client = client
-        print(client)
         self.bot_id = client.api_call('auth.test')['user_id']
-
 
     def listen(self):
         command, channel = self.parse_bot_commands()
@@ -68,11 +65,13 @@ class Bobby(object):
             message_to_tell = ' '.join(command.split(' ')[2:])
             if person_name in ['hector', 'irina']:
                 return '{} is pretty cool imo'.format(person_name.title())
-            return '{} {}'.format(person_name.title(), message_to_tell)        
+            return '{} {}'.format(person_name.title(), message_to_tell)
         if command.lower() == 'random emoji':
             return self.random_emoji()
         if command == '69':
             return self.sixty_nine()
+        if 'play despacito' in command.lower():
+            return self.play_despacito()
         return self.default_response
 
     def random_emoji(self):
@@ -83,6 +82,8 @@ class Bobby(object):
     def sixty_nine(self):
         return 'nice :sunglasses:'
 
+    def play_despacito(self):
+        return 'This is so sad https://www.youtube.com/watch?v=whwe0KD_rGw'
 
 if __name__ == "__main__":
     if slack_client.rtm_connect(with_team_state=False):
