@@ -2,13 +2,14 @@ import os
 import sys
 import time
 import re
+import random
 from slackclient import SlackClient
 
-# instantiate Slack client
+print(1)
+
 slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
 
-MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
-
+print('hello world')
 
 class Bobby(object):
 
@@ -17,12 +18,15 @@ class Bobby(object):
     default_response = 'Not sure what you mean. Try yelling at your monitor.'
 
     def __init__(self, client):
+        print('init')
         self.client = client
+        print(client)
         self.bot_id = client.api_call('auth.test')['user_id']
+
 
     def listen(self):
         command, channel = self.parse_bot_commands()
-        self.handle_command(command, channel)
+        self.send_response(command, channel)
         time.sleep(self.rtm_read_delay)
 
     def parse_bot_commands(self):
@@ -39,7 +43,7 @@ class Bobby(object):
                     return message, event['channel']
         return None, None
 
-    def parse_direct_mention(message_text):
+    def parse_direct_mention(self, message_text):
         """
         Finds a direct mention (a mention that is at the beginning) in message
         text and returns the user ID which was mentioned. If there is no direct
@@ -50,7 +54,7 @@ class Bobby(object):
         # remaining message
         return (matches.group(1), matches.group(2).strip()) if matches else (None, None)
 
-    def send_response(command, channel):
+    def send_response(self, command, channel):
         """
         Executes bot command if the command is known
         """
@@ -65,7 +69,7 @@ class Bobby(object):
         if command == 'Tell Rich he sucks':
             return 'Rich you suck!'
         if command == 'Random Emoji':
-            return random_emoji()
+            return self.random_emoji()
         return self.default_response
 
     def random_emoji(self):
