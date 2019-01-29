@@ -5,11 +5,8 @@ import re
 import random
 from slackclient import SlackClient
 
-print(1)
-
 slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
 
-print('hello world')
 
 class Bobby(object):
 
