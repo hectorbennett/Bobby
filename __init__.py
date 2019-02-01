@@ -3,6 +3,11 @@ import sys
 import time
 import re
 import random
+import urllib
+import json
+
+from urllib.request import urlopen
+
 from slackclient import SlackClient
 
 slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
@@ -72,6 +77,8 @@ class Bobby(object):
             return self.sixty_nine()
         if 'play despacito' in command.lower():
             return self.play_despacito()
+        if 'random gif' in command.lower():
+            return self.random_gif()
         return self.default_response
 
     def random_emoji(self):
@@ -84,6 +91,12 @@ class Bobby(object):
 
     def play_despacito(self):
         return 'This is so sad https://www.youtube.com/watch?v=whwe0KD_rGw'
+
+    def random_gif(self):
+        url = 'http://api.giphy.com/v1/gifs/random?api_key={}'.format(
+            os.environ.get('GIPHY_API_KEY'))
+        data = json.loads(urlopen(url).read().decode('utf8'))
+        return data['data']['images']['fixed_height']['url']
 
 if __name__ == "__main__":
     if slack_client.rtm_connect(with_team_state=False):
