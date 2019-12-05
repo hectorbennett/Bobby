@@ -5,11 +5,10 @@ import re
 import random
 import urllib
 import json
-
 from urllib.request import urlopen
-
 from slackclient import SlackClient
 
+os.environ['SLACK_BOT_TOKEN'] = 'Secret key here'
 slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
 
 
@@ -71,7 +70,7 @@ class Bobby(object):
             if person_name in ['hector', 'irina']:
                 return '{} is pretty cool imo'.format(person_name.title())
             return '{} {}'.format(person_name.title(), message_to_tell)
-        if command.lower() == 'random emoji':
+        if 'random emoji' in command.lower():
             return self.random_emoji()
         if command == '69':
             return self.sixty_nine()
@@ -79,6 +78,8 @@ class Bobby(object):
             return self.play_despacito()
         if 'random gif' in command.lower():
             return self.random_gif()
+        if 'thank' in command.lower():
+            return self.search_gif("you're-welcome")
         return self.default_response
 
     def random_emoji(self):
@@ -93,10 +94,22 @@ class Bobby(object):
         return 'This is so sad https://www.youtube.com/watch?v=whwe0KD_rGw'
 
     def random_gif(self):
-        url = 'http://api.giphy.com/v1/gifs/random?api_key={}'.format(
-            os.environ.get('GIPHY_API_KEY'))
+        url = 'http://api.giphy.com/v1/gifs/search?api_key={api_key}&q=random&limit=1&offset={offset}&rating=pg-13'.format(
+            api_key='kiW9bKPcKfuRiMYILAskeS8JRwAOAWDb' or os.environ.get('GIPHY_API_KEY'),
+            offset=random.randint(0, 4000)
+        )
         data = json.loads(urlopen(url).read().decode('utf8'))
-        return data['data']['images']['fixed_height']['url']
+        return data['data'][0]['images']['downsized']['url']
+
+    def search_gif(self, search_term):
+        url = 'http://api.giphy.com/v1/gifs/search?api_key={api_key}&q={query}&limit=1&offset={offset}&rating=pg-13'.format(
+            api_key='kiW9bKPcKfuRiMYILAskeS8JRwAOAWDb' or os.environ.get('GIPHY_API_KEY'),
+            offset=random.randint(1, 6),
+            query=search_term
+        )
+        print(url)
+        data = json.loads(urlopen(url).read().decode('utf8'))
+        return data['data'][0]['images']['downsized']['url']
 
 if __name__ == "__main__":
     if slack_client.rtm_connect(with_team_state=False):
